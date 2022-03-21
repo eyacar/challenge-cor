@@ -1,0 +1,24 @@
+.container{
+    &__select{
+        display: flex;
+        justify-content: center;
+    }
+    &__todosGrid{
+        display: grid;
+        grid-template-columns:  repeat(2, 600px);
+        justify-content: center;
+        margin-top: 10px;
+
+        @media (max-width: 1200px) {
+            grid-template-columns:  repeat(2, 500px);
+        }
+
+        @media (max-width: 990px) {
+            grid-template-columns:  repeat(1, 400px);
+        }
+
+        @media (max-width: 400px) {
+            grid-template-columns:  repeat(1, 300px);
+        }
+    }
+}
