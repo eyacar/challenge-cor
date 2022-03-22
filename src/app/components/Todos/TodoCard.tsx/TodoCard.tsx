@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import { useAppDispatch } from '../../../store/hooks';
 import { deleteTodo, editTodo } from '../../../store/todos/index';
 import Card from '@mui/material/Card';
@@ -6,7 +6,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import SelectInput from '../../SelectInput/SelectInput';
+import { SelectInput } from '../../Inputs/index';
 import { ITodo } from '../../../store/interface';
 
 import Style from './todoCard.module.scss'
@@ -26,15 +26,24 @@ const CommonTitle: React.FC<CommonTitleProps> = ({ content }) => (
 )
 
 export interface TodoCardProps {
-    todo: ITodo
+    todo: ITodo,
+    setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TodoCard: React.FC<TodoCardProps> = ({ todo }) => {
+interface EditValues {
+    priority: string,
+    status: string
+}
+
+const TodoCard: React.FC<TodoCardProps> = ({ todo, setIsEditing }) => {
     const { priority, status, title, description, id } = todo;
 
     const [isEdit, setIsEdit] = useState<boolean>(false);
-    const [priorityChoice, setPriorityChoise] = useState<string | null>(null);
-    const [statusChoice, setStatusChoise] = useState<string | null>(null);
+    const [filterValues, setFilterValues] = useState<EditValues>({ priority: '', status: '' });
+
+    useEffect(() =>{
+        setIsEditing(isEdit)
+    },[isEdit, setIsEditing])
 
 
     const dispatch = useAppDispatch();
@@ -43,8 +52,13 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo }) => {
         dispatch(deleteTodo(id));
     }
 
+    const onHandleChange = useCallback((fieldName: string, value:string) => {
+        setFilterValues((prevValues) => ({ ...prevValues, [fieldName]: value }));
+    }, []);
+
 
     const editButton = useMemo(() => {
+        const { priority:priorityChoice, status:statusChoice } = filterValues;
         const handleEdit = () => {
             if(isEdit){
                 const newPriority:string | null = priorityChoice || priority;
@@ -64,7 +78,7 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo }) => {
                 {isEdit ? 'Done' : 'Edit (Priority or State)'}
             </Button>
         )
-    }, [dispatch, id, isEdit, priority, priorityChoice, status, statusChoice])
+    }, [dispatch, filterValues, id, isEdit, priority, status])
 
     const editableItems = useMemo(() => {
         if (!isEdit) return (
@@ -81,7 +95,9 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo }) => {
                         name='Priority'
                         options={['low', 'medium', 'high']}
                         initialValue={priority}
-                        setChoice={setPriorityChoise}
+                        onHandleChange={onHandleChange}
+                        inputKey='priority'
+                        inputValue={filterValues.priority}
                     />
                 </div>
                 <div className={Style["container__editable--on__select"]}>
@@ -90,13 +106,15 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo }) => {
                         name='Status'
                         options={['new', 'in process', 'done']}
                         initialValue={status}
-                        setChoice={setStatusChoise}
+                        onHandleChange={onHandleChange}
+                        inputKey='status'
+                        inputValue={filterValues.status}
                     />
                 </div>
             </div>
         )
 
-    }, [isEdit, priority, status])
+    }, [filterValues.priority, filterValues.status, isEdit, onHandleChange, priority, status])
 
 
     return (
