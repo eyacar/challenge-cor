@@ -49,4 +49,16 @@ export class TodoHelper{
         }
     }
 
+    static addTodoToFakeStore(todo:ITodo){
+        const store = window.localStorage.getItem('todosFakeStore');
+
+        const storeObject:ITodo[] = store && JSON.parse(store);
+
+        if(store && storeObject){
+            const newObject = [...storeObject, todo]
+            return window.localStorage.setItem('todosFakeStore', JSON.stringify(newObject))
+        }
+
+    }
+
 }

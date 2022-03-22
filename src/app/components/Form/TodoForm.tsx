@@ -1,10 +1,14 @@
 import { memo, useCallback, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import { useAppDispatch } from "../../store/hooks";
+import { useNavigate } from "react-router-dom";
+import { addTodo } from "../../store/todos";
 import SelectInput from "../Inputs/SelectInput";
 import Button from "@mui/material/Button";
 import GenericInput from "../Inputs/GenericInput";
 import TextArea from "../Inputs/TextArea";
-import Typography from '@mui/material/Typography';
 import { addTodoValidationSchema } from './validationScheme';
+import { ITodo } from "../../store/interface";
 
 import Style from './style/todoForm.module.scss'
 
@@ -24,8 +28,10 @@ const initialState = {
 
 const TodoForm = () => {
     const [values, setValues] = useState<FormValues>(initialState);
-
     const [errors, setErrors] = useState<FormValues>(initialState);
+
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const onHandleChange = useCallback((fieldName: string, value: string) => {
         setValues((prevValues) => ({ ...prevValues, [fieldName]: value }));
@@ -42,7 +48,9 @@ const TodoForm = () => {
 
             if (isFormValid) {
                 // If form is valid, continue submission.
-                console.log(values);
+                const newTodo:ITodo = {...values, id: uuidv4()}
+                dispatch(addTodo(newTodo));
+                navigate('/')
             } else {
                 // If form is not valid, check which fields are incorrect:
                 addTodoValidationSchema
@@ -58,19 +66,10 @@ const TodoForm = () => {
                     });
             }
         },
-        [values]
+        [dispatch, values]
     );
 
     return (
-        <>
-            <Typography
-                variant="h4"
-                component="h4"
-                textAlign='center'
-                marginTop={4}
-                gutterBottom>
-                You can add a Todo to the list!
-            </Typography>
             <form onSubmit={handleSubmit} noValidate className={Style.container}>
                 <SelectInput
                     name='Priority'
@@ -109,7 +108,6 @@ const TodoForm = () => {
                     </Button>
                 </div>
             </form>
-        </>
     )
 };
 

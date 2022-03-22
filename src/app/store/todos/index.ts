@@ -23,6 +23,6 @@ export const todosSlice = createSlice({
   },
 });
 
-export const { deleteTodo, editTodo } = todosSlice.actions;
+export const { deleteTodo, editTodo, addTodo } = todosSlice.actions;
 
 export default todosSlice.reducer;
