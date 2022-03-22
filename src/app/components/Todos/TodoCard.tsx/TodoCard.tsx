@@ -90,7 +90,6 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, setIsEditing }) => {
         return (
             <div className={Style["container__editable--on"]}>
                 <div className={Style["container__editable--on__select"]}>
-                    < CommonTitle content={`Priority: `} />
                     <SelectInput
                         name='Priority'
                         options={['low', 'medium', 'high']}
@@ -101,7 +100,6 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, setIsEditing }) => {
                     />
                 </div>
                 <div className={Style["container__editable--on__select"]}>
-                    < CommonTitle content={`Status: `} />
                     <SelectInput
                         name='Status'
                         options={['new', 'in process', 'done']}

@@ -11,14 +11,13 @@ const Home = () => {
 
     useEffect(() => {
         dispatch(getTodos())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
-        <div>
-            <MainContainer navTitle='Welcome to Todos Portal!'>
-                <TodoList/>
-            </MainContainer>
-        </div>
+        <MainContainer navTitle='Welcome to Todos Portal!'>
+            <TodoList />
+        </MainContainer>
     );
 }
 

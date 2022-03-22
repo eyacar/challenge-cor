@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
@@ -15,11 +16,16 @@ interface PropsNav{
 const NavBar: React.FC<PropsNav> = ({ navTitle }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const navigate = useNavigate()
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleClose = (param:string) => {
     setAnchorEl(null);
+    navigate(param)
   };
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -47,8 +53,8 @@ const NavBar: React.FC<PropsNav> = ({ navTitle }) => {
               'aria-labelledby': 'basic-button',
             }}
           >
-            <MenuItem onClick={handleClose}>Home</MenuItem>
-            <MenuItem onClick={handleClose}>About</MenuItem>
+            <MenuItem onClick={() => handleClose('/')}>Todo List</MenuItem>
+            <MenuItem onClick={() => handleClose('add-todo')}>Add Todo</MenuItem>
           </Menu>
           <Typography variant="h6" color="inherit" component="div">
             {navTitle}

@@ -2,6 +2,14 @@
     &__select{
         display: flex;
         justify-content: center;
+        @media (max-width: 990px) {
+            flex-direction: column;
+            align-items: center;
+        }
+        @media (max-width: 450px) {
+            align-items: end;
+        }
+
     }
     &__todosGrid{
         display: grid;
